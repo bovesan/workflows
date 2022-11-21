@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <transcoder>
- <workflow nameConvention="[path][baseName][_frame][.ext]" name="RenameFromGroupName">
-  <view y="103" x="-180" scale="1"/>
+ <workflow name="RenameFromGroupName" nameConvention="[path][baseName][_frame][.ext]">
+  <view scale="0.833333" y="-217.2" x="-93.6"/>
   <nodes>
-   <node class="Watcher" type="input">
+   <node type="input" class="Watcher">
     <properties>
      <objectName type="string">Watcher</objectName>
      <color type="color">#aa557f</color>
      <colorByStatus type="bool">false</colorByStatus>
-     <pos type="point2">-528,-228</pos>
+     <pos type="point2">-619,-354</pos>
      <schemaName type="string">watcher</schemaName>
      <nameConvention type="CnameConvention">[path][baseName][_frame][.ext]</nameConvention>
      <bypassSupported type="bool">true</bypassSupported>
@@ -28,89 +28,20 @@
      <areYouSure type="bool">false</areYouSure>
     </properties>
     <connections>
-     <rankFrom name="rankFrom" specialType="order" id="dc67dd5b-fdf4-47b6-b9eb-91309f521db2" type="input"/>
-     <rankTo name="rankTo" specialType="order" id="dae87f66-6f12-4d68-99a2-3213b283be30" type="output">
-      <linkedTo>91018238-771e-4553-b981-cf240fedabae</linkedTo>
-     </rankTo>
-     <To name="To" id="b0509a9e-99a3-44f5-8865-6852eaa2ce8f" type="output">
-      <linkedTo>97862747-bebe-4342-a096-640f0c19fd39</linkedTo>
-      <linkedTo>6dedae29-b586-4d14-976a-ac96f379e3e6</linkedTo>
+     <rankFrom type="input" id="dc67dd5b-fdf4-47b6-b9eb-91309f521db2" name="rankFrom" specialType="order"/>
+     <rankTo type="output" id="dae87f66-6f12-4d68-99a2-3213b283be30" name="rankTo" specialType="order"/>
+     <To type="output" id="b0509a9e-99a3-44f5-8865-6852eaa2ce8f" name="To">
+      <linkedTo>59c82fa3-89ac-4e4a-bf78-b41a77e3c9dd</linkedTo>
      </To>
     </connections>
    </node>
-   <node class="MistikaRender" type="task">
+   <node type="task" class="Python">
     <properties>
-     <objectName type="string">MistikaRender</objectName>
-     <color type="color">#0063b4</color>
-     <colorByStatus type="bool">false</colorByStatus>
-     <pos type="point2">-181,-144</pos>
-     <schemaName type="string">mistikarender</schemaName>
-     <nameConvention type="CnameConvention"></nameConvention>
-     <bypassSupported type="bool">true</bypassSupported>
-     <bypassEnabled type="bool">false</bypassEnabled>
-     <renderFarmSupported type="bool">true</renderFarmSupported>
-     <farmParams type="string"></farmParams>
-     <renderFarmEnabled type="bool">false</renderFarmEnabled>
-     <url type="string">C:/Users/haava/vc/workflows/output/</url>
-     <metadata type="MediaFileInfoData"></metadata>
-     <exportMetadata type="int">0</exportMetadata>
-    </properties>
-    <connections>
-     <rankFrom name="rankFrom" specialType="order" id="91018238-771e-4553-b981-cf240fedabae" type="input">
-      <linkedTo>dae87f66-6f12-4d68-99a2-3213b283be30</linkedTo>
-     </rankFrom>
-     <rankTo name="rankTo" specialType="order" id="b77ceec9-4824-434a-b838-c2c88f011206" type="output">
-      <linkedTo>3c3025d5-b2a0-420c-b03d-b91c0b1c0f45</linkedTo>
-     </rankTo>
-     <rnd name="rnd" id="6dedae29-b586-4d14-976a-ac96f379e3e6" type="input">
-      <linkedTo>b0509a9e-99a3-44f5-8865-6852eaa2ce8f</linkedTo>
-     </rnd>
-     <VideoOut name="VideoOut" label="AV Out" id="ee9527b0-f1bd-4d5b-9577-a4df35d4efa1" type="output">
-      <linkedTo>9b33a44c-9b3e-41ff-8c29-b2898f00a1c1</linkedTo>
-     </VideoOut>
-     <AudioOut name="AudioOut" label="Ext. Audio" id="22e5bca7-4a14-49ce-afba-bfecb42b702c" type="output"/>
-    </connections>
-   </node>
-   <node class="SerializeInputs" type="task">
-    <properties>
-     <objectName type="string">SerializeInputs</objectName>
-     <color type="color">#677688</color>
-     <colorByStatus type="bool">false</colorByStatus>
-     <pos type="point2">-408,5</pos>
-     <schemaName type="string">serializeinputs</schemaName>
-     <nameConvention type="CnameConvention"></nameConvention>
-     <bypassSupported type="bool">false</bypassSupported>
-     <bypassEnabled type="bool">false</bypassEnabled>
-     <renderFarmSupported type="bool">false</renderFarmSupported>
-     <farmParams type="string"></farmParams>
-     <renderFarmEnabled type="bool">false</renderFarmEnabled>
-     <logicalOperation type="int">0</logicalOperation>
-    </properties>
-    <connections>
-     <rankFrom name="rankFrom" specialType="order" id="3c3025d5-b2a0-420c-b03d-b91c0b1c0f45" type="input">
-      <linkedTo>b77ceec9-4824-434a-b838-c2c88f011206</linkedTo>
-     </rankFrom>
-     <rankTo name="rankTo" specialType="order" id="9f69fc6a-54fb-4dc3-8ac5-e85df73eceea" type="output">
-      <linkedTo>941293a3-1079-413e-be02-3776b44f96c2</linkedTo>
-     </rankTo>
-     <Out name="Out" id="dd281407-4b1c-418d-82a8-40ab333fb0a7" type="output">
-      <linkedTo>a27b730b-e7d1-4856-bd6b-2a6e03ffeea0</linkedTo>
-     </Out>
-     <In name="In" id="97862747-bebe-4342-a096-640f0c19fd39" type="input">
-      <linkedTo>b0509a9e-99a3-44f5-8865-6852eaa2ce8f</linkedTo>
-     </In>
-     <In name="In" id="9b33a44c-9b3e-41ff-8c29-b2898f00a1c1" type="input">
-      <linkedTo>ee9527b0-f1bd-4d5b-9577-a4df35d4efa1</linkedTo>
-     </In>
-    </connections>
-   </node>
-   <node class="pyPrintInputs" type="default">
-    <properties>
-     <objectName type="string">pyGroupName</objectName>
+     <objectName type="string">GetGroupname</objectName>
      <color type="color">#78b4b4</color>
      <colorByStatus type="bool">false</colorByStatus>
-     <pos type="point2">-122,174</pos>
-     <schemaName type="string">pyprintinputs</schemaName>
+     <pos type="point2">-220,-359.6</pos>
+     <schemaName type="string">python</schemaName>
      <nameConvention type="CnameConvention"></nameConvention>
      <bypassSupported type="bool">false</bypassSupported>
      <bypassEnabled type="bool">false</bypassEnabled>
@@ -118,17 +49,11 @@
      <farmParams type="string"></farmParams>
      <renderFarmEnabled type="bool">false</renderFarmEnabled>
      <code type="string">from Mistika.Qt import QColor
-from Mistika.classes import Cconnector,CbaseItem
-
-import re
-import os
-import time
-import threading
+from Mistika.classes import Cconnector,CbaseItem,CuniversalPath
 
 def init(self):
-    self.addConnector("files",Cconnector.CONNECTOR_TYPE_INPUT,Cconnector.MODE_OPTIONAL)
-    self.addConnector("name",Cconnector.CONNECTOR_TYPE_OUTPUT,Cconnector.MODE_OPTIONAL)
-    self.setAcceptConnectors(True,"files_%") 
+    self.addConnector("rndin",Cconnector.CONNECTOR_TYPE_INPUT,Cconnector.MODE_REQUIRED)
+    self.addConnector("rndout",Cconnector.CONNECTOR_TYPE_OUTPUT,Cconnector.MODE_OPTIONAL)
     self.bypassSupported=False    
     self.color=QColor(120,180,180)
     self.setSupportedTypes(CbaseItem.NODETYPE_OUTPUT)
@@ -142,14 +67,33 @@ def process(self):
       return True
   inputs=self.getConnectorsByType(Cconnector.CONNECTOR_TYPE_INPUT)
   for c in inputs:
-      print c.label(),":"
       for up in c.getUniversalPaths():
-          print "  ",up.getFileName(),": ",up.toString()
-          if up.getFilePath().endswith('.rnd'):
-            render = Render(up.getFilePath())
-            print "Group name:", render.groupname
+        print up.toString()
+        render = Render(up.getFilePath())
+        print "Group name:", render.groupname
+        p=up
+        print up.toString()
+        p.setParam("groupname", render.groupname)
+        print p.toString()
+        out=self.getFirstConnectorByName("rndout")
+        out.clearUniversalPaths()
+        out.addUniversalPath(p)
 
   return True
+
+import os
+import time
+import threading
+import tempfile
+import copy
+import shutil
+import re
+import glob
+
+RENAME_MAGIC_WORDS = ['auto', 'rename']
+
+def escape_par(string):
+    return string.replace('(', '\(').replace(')', '\)')
 
 class DependencyType(object):
     def __init__(self, id, description):
@@ -340,7 +284,6 @@ class Dependency(object):
                 os.remove(self.path)
             except OSError:
                 print 'Could not remove %s' % self.path
-
 
 class Stack(object):
     exists = False
@@ -807,17 +750,80 @@ class Render(Stack):
             tag = '_'+tag
         archivePath = os.path.join(archiveFolder, "%s%s_%s.rnd" % (timeStr, tag, self.groupname))
         shutil.copy2(self.path, archivePath)
+
+class Subtitles(object):
+    count = 0
+    def __init__(self, render):
+        self.render = render
+        subs = {}
+        for dependency in render.dependencies:
+            if dependency.type == 'dat':
+                if not dependency.x in render.subtitleIds:
+                    continue
+                if dependency.level != 4:
+                    continue
+                subs[dependency.x] = dependency
+        srt = ''
+        vtt = 'WEBVTT\r\n\r\n'
+        srtIndex = 0
+        for subId in sorted(subs):
+            dependency = subs[subId]
+            srtIndex += 1
+            srtStart = hyperspeed.video.frames2tc_float(subId - render.level_offsets[dependency.level], render.fps)
+            srtEnd = hyperspeed.video.frames2tc_float(subId - render.level_offsets[dependency.level] + dependency.duration, render.fps)
+            srt += '''%i
+%s --> %s
+%s
+
+''' % (srtIndex, srtStart, srtEnd, dependency.text.string )
+            vtt += '''%i
+%s --> %s
+%s
+
+''' % (srtIndex, srtStart.replace(',', '.'), srtEnd.replace(',', '.'), dependency.text.string )
+            self.count = len(subs)
+            self.srt = srt
+            self.vtt = vtt
+
+
 </code>
     </properties>
     <connections>
-     <rankFrom name="rankFrom" specialType="order" id="941293a3-1079-413e-be02-3776b44f96c2" type="input">
-      <linkedTo>9f69fc6a-54fb-4dc3-8ac5-e85df73eceea</linkedTo>
-     </rankFrom>
-     <rankTo name="rankTo" specialType="order" id="8a296314-e355-47ce-917b-8a5a1aa88974" type="output"/>
-     <files name="files" id="a27b730b-e7d1-4856-bd6b-2a6e03ffeea0" type="input">
-      <linkedTo>dd281407-4b1c-418d-82a8-40ab333fb0a7</linkedTo>
-     </files>
-     <name name="name" id="4de57cae-b842-48bc-974f-852210a8e20b" type="output"/>
+     <rankFrom type="input" id="fd735eef-0425-4fed-b438-d6b574274a90" name="rankFrom" specialType="order"/>
+     <rankTo type="output" id="5057e89c-4473-40b5-ab39-b9c49c56a1f5" name="rankTo" specialType="order"/>
+     <rndin type="input" id="59c82fa3-89ac-4e4a-bf78-b41a77e3c9dd" name="rndin">
+      <linkedTo>b0509a9e-99a3-44f5-8865-6852eaa2ce8f</linkedTo>
+     </rndin>
+     <rndout type="output" id="af710d5e-75c7-4127-bc43-225739c685ed" name="rndout">
+      <linkedTo>13795320-f155-4cf3-9023-063149d906cb</linkedTo>
+     </rndout>
+    </connections>
+   </node>
+   <node type="task" class="MistikaRender">
+    <properties>
+     <objectName type="string">MistikaRender</objectName>
+     <color type="color">#0063b4</color>
+     <colorByStatus type="bool">false</colorByStatus>
+     <pos type="point2">150,-357.6</pos>
+     <schemaName type="string">mistikarender</schemaName>
+     <nameConvention type="CnameConvention"></nameConvention>
+     <bypassSupported type="bool">true</bypassSupported>
+     <bypassEnabled type="bool">false</bypassEnabled>
+     <renderFarmSupported type="bool">true</renderFarmSupported>
+     <farmParams type="string"></farmParams>
+     <renderFarmEnabled type="bool">false</renderFarmEnabled>
+     <url type="string"></url>
+     <metadata type="MediaFileInfoData"></metadata>
+     <exportMetadata type="int">0</exportMetadata>
+    </properties>
+    <connections>
+     <rankFrom type="input" id="257e5093-f1dc-447b-a12d-60ded5dead7b" name="rankFrom" specialType="order"/>
+     <rankTo type="output" id="94275731-a006-4dba-bf37-2eb26d71e7ed" name="rankTo" specialType="order"/>
+     <rnd type="input" id="13795320-f155-4cf3-9023-063149d906cb" name="rnd">
+      <linkedTo>af710d5e-75c7-4127-bc43-225739c685ed</linkedTo>
+     </rnd>
+     <VideoOut label="AV Out" type="output" id="6d403464-25e3-4ab3-b6ff-a7df27410c57" name="VideoOut"/>
+     <AudioOut label="Ext. Audio" type="output" id="400a8fc9-f29d-47fc-a956-1fa85d96d308" name="AudioOut"/>
     </connections>
    </node>
   </nodes>
