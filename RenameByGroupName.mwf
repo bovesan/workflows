@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <transcoder>
- <workflow name="RenameFromGroupName" nameConvention="[path][baseName][_frame][.ext]">
-  <view scale="0.833333" y="-217.2" x="-93.6"/>
+ <workflow nameConvention="[path][baseName][_frame][.ext]" name="RenameFromGroupName">
+  <view y="-99.6" scale="0.833333" x="-231.6"/>
   <nodes>
    <node type="input" class="Watcher">
     <properties>
@@ -28,19 +28,55 @@
      <areYouSure type="bool">false</areYouSure>
     </properties>
     <connections>
-     <rankFrom type="input" id="dc67dd5b-fdf4-47b6-b9eb-91309f521db2" name="rankFrom" specialType="order"/>
-     <rankTo type="output" id="dae87f66-6f12-4d68-99a2-3213b283be30" name="rankTo" specialType="order"/>
-     <To type="output" id="b0509a9e-99a3-44f5-8865-6852eaa2ce8f" name="To">
-      <linkedTo>59c82fa3-89ac-4e4a-bf78-b41a77e3c9dd</linkedTo>
+     <rankFrom specialType="order" type="input" name="rankFrom" id="dc67dd5b-fdf4-47b6-b9eb-91309f521db2"/>
+     <rankTo specialType="order" type="output" name="rankTo" id="dae87f66-6f12-4d68-99a2-3213b283be30">
+      <linkedTo>257e5093-f1dc-447b-a12d-60ded5dead7b</linkedTo>
+     </rankTo>
+     <To type="output" name="To" id="b0509a9e-99a3-44f5-8865-6852eaa2ce8f">
+      <linkedTo>13795320-f155-4cf3-9023-063149d906cb</linkedTo>
+      <linkedTo>9beee748-ee89-4e65-824f-ba92705d6203</linkedTo>
      </To>
+    </connections>
+   </node>
+   <node type="task" class="MistikaRender">
+    <properties>
+     <objectName type="string">MistikaRender</objectName>
+     <color type="color">#0063b4</color>
+     <colorByStatus type="bool">false</colorByStatus>
+     <pos type="point2">-571.2,-115.2</pos>
+     <schemaName type="string">mistikarender</schemaName>
+     <nameConvention type="CnameConvention">[envName_][renderName][_segmentIndex]</nameConvention>
+     <bypassSupported type="bool">true</bypassSupported>
+     <bypassEnabled type="bool">false</bypassEnabled>
+     <renderFarmSupported type="bool">true</renderFarmSupported>
+     <farmParams type="string"></farmParams>
+     <renderFarmEnabled type="bool">false</renderFarmEnabled>
+     <url type="string">F:/limbo/</url>
+     <metadata type="MediaFileInfoData"></metadata>
+     <exportMetadata type="int">0</exportMetadata>
+    </properties>
+    <connections>
+     <rankFrom specialType="order" type="input" name="rankFrom" id="257e5093-f1dc-447b-a12d-60ded5dead7b">
+      <linkedTo>dae87f66-6f12-4d68-99a2-3213b283be30</linkedTo>
+     </rankFrom>
+     <rankTo specialType="order" type="output" name="rankTo" id="94275731-a006-4dba-bf37-2eb26d71e7ed">
+      <linkedTo>fd735eef-0425-4fed-b438-d6b574274a90</linkedTo>
+     </rankTo>
+     <rnd type="input" name="rnd" id="13795320-f155-4cf3-9023-063149d906cb">
+      <linkedTo>b0509a9e-99a3-44f5-8865-6852eaa2ce8f</linkedTo>
+     </rnd>
+     <VideoOut type="output" name="VideoOut" id="6d403464-25e3-4ab3-b6ff-a7df27410c57" label="AV Out">
+      <linkedTo>07894591-9fe5-43be-b721-f7ac4b6ad066</linkedTo>
+     </VideoOut>
+     <AudioOut type="output" name="AudioOut" id="400a8fc9-f29d-47fc-a956-1fa85d96d308" label="Ext. Audio"/>
     </connections>
    </node>
    <node type="task" class="Python">
     <properties>
-     <objectName type="string">GetGroupname</objectName>
+     <objectName type="string">RenameByGroupName</objectName>
      <color type="color">#78b4b4</color>
      <colorByStatus type="bool">false</colorByStatus>
-     <pos type="point2">-220,-359.6</pos>
+     <pos type="point2">-14.7999,-197.6</pos>
      <schemaName type="string">python</schemaName>
      <nameConvention type="CnameConvention"></nameConvention>
      <bypassSupported type="bool">false</bypassSupported>
@@ -52,8 +88,8 @@
 from Mistika.classes import Cconnector,CbaseItem,CuniversalPath
 
 def init(self):
-    self.addConnector("rndin",Cconnector.CONNECTOR_TYPE_INPUT,Cconnector.MODE_REQUIRED)
-    self.addConnector("rndout",Cconnector.CONNECTOR_TYPE_OUTPUT,Cconnector.MODE_OPTIONAL)
+    self.addConnector("rnd",Cconnector.CONNECTOR_TYPE_INPUT,Cconnector.MODE_REQUIRED)
+    self.addConnector("media",Cconnector.CONNECTOR_TYPE_INPUT,Cconnector.MODE_REQUIRED)
     self.bypassSupported=False    
     self.color=QColor(120,180,180)
     self.setSupportedTypes(CbaseItem.NODETYPE_OUTPUT)
@@ -65,19 +101,17 @@ def isReady(self):
 def process(self):
   if self.bypassEnabled:
       return True
-  inputs=self.getConnectorsByType(Cconnector.CONNECTOR_TYPE_INPUT)
-  for c in inputs:
-      for up in c.getUniversalPaths():
-        print up.toString()
-        render = Render(up.getFilePath())
-        print "Group name:", render.groupname
-        p=up
-        print up.toString()
-        p.setParam("groupname", render.groupname)
-        print p.toString()
-        out=self.getFirstConnectorByName("rndout")
-        out.clearUniversalPaths()
-        out.addUniversalPath(p)
+  inputRnd=self.getFirstConnectorByName("rnd")
+  inputMedia=self.getFirstConnectorByName("media")
+  for up in inputMedia.getUniversalPaths():
+    inputPath = up.getFilePath();
+    print "Input path:", inputPath
+    break
+  for up in inputRnd.getUniversalPaths():
+    render = Render(up.getFilePath())
+    print "Group name:", render.groupname
+    rename(render, self)
+    break
 
   return True
 
@@ -89,6 +123,7 @@ import copy
 import shutil
 import re
 import glob
+import platform
 
 RENAME_MAGIC_WORDS = ['auto', 'rename']
 
@@ -165,10 +200,10 @@ class Dependency(object):
             self.level = level
             self.x = x
             self.duration = duration
-            if f_type == 'dat':
-                self.text = text.Title(self.path)
-                for font in self.text.fonts:
-                    self.dependencies.append(Dependency(font, 'font', parent=parent))
+            # if f_type == 'dat':
+            #     self.text = text.Title(self.path)
+            #     for font in self.text.fonts:
+            #         self.dependencies.append(Dependency(font, 'font', parent=parent))
             if name.endswith('.R3D'):
                 for chunkName in glob.glob(name.replace('_001.', '_*.')):
                     if chunkName != self.path:
@@ -208,12 +243,14 @@ class Dependency(object):
             if self.name.startswith('/'):
                 self._path = self.name
             elif self.type == 'dat':
-                self._path = os.path.join(mistika.projects_folder, self.name)
+                self._path = ''
+                # self._path = os.path.join(mistika.projects_folder, self.name)
             elif self.type in ['glsl', 'lut']:
                 if self.name.startswith('/'):
                     self._path = self.name
                 else:
-                    self._path = os.path.join(mistika.env_folder, self.name)
+                    self._path = ''
+                    # self._path = os.path.join(mistika.env_folder, self.name)
             elif self.type == 'font':
                 if self.name in mistika.fonts:
                     self._path = mistika.fonts[self.name]
@@ -742,7 +779,8 @@ class Render(Stack):
             if dependency.type in ['highres', 'lowres', 'audio']:
                 dependency.remove()
     def archive(self, tag=''):
-        archiveFolder = os.path.join(mistika.projects_folder, self.project, 'DATA', 'RENDER', 'Exported_files')
+        archiveFolder = os.path.join('D:/mediaraid/Projects', self.project, 'DATA', 'RENDER', 'Exported_files')
+        # archiveFolder = os.path.join(mistika.projects_folder, self.project, 'DATA', 'RENDER', 'Exported_files')
         if not os.path.isdir(archiveFolder):
             os.makedirs(archiveFolder)
         timeStr = time.strftime("%y%m%d-%H%M")
@@ -786,44 +824,125 @@ class Subtitles(object):
             self.vtt = vtt
 
 
-</code>
+def prettyPath(path, pattern, render):
+    prettyName = render.project+'_'+render.title+(os.path.splitext(path)[-1])
+    prettyPath = pattern
+    prettyPath = re.sub(r'\[_*project_*\]', render.project, prettyPath)
+    prettyPath = re.sub(r'\[_*ext_*\]', path.split('.')[-1], prettyPath)
+    return os.path.join(os.path.dirname(prettyPath), prettyName)
+    pathParts = path.split('/')
+    patternParts = pattern.split('/')
+    print path, pattern, prettyname
+    for i, patternPart in enumerate(patternParts):
+        print patternPart
+        if re.search(r'[^/]*\[(_|\.)?renderName\][^/]*', patternPart):
+            partExt = re.search(r'\[(_|\.)?ext\]', patternPart)
+            if partExt:
+                partExt = os.path.splitext(pathParts[i])[1]
+            else:
+                partExt = ''
+            framenumber = re.search(r'%0\dd', pathParts[i])
+            if framenumber:
+                framenumber = '.'+framenumber.group(0)
+            else:
+                framenumber = ''
+            pathParts[i] = prettyname+framenumber+partExt
+    return '/'.join(pathParts)
+
+def rename(render, context=None):
+  render.archive('renamed')
+
+  folders = []
+  errors = ""
+
+  for dependency in render.output_stack.dependencies:
+      if (dependency.type in ['highres', 'lowres', 'audio']):
+          if (dependency.type == 'audio'):
+              new_path = prettyPath(dependency.path, render.audioPath, render)
+          else:
+              new_path = prettyPath(dependency.path, render.mediaPath, render)
+          folder = os.path.dirname(new_path)
+          if not os.path.isdir(folder):
+              if os.path.exists(folder):
+                  context.critical("msgType","Rename failed:\nTarget path, "+folder+" exists and is not a folder.")
+                  sys.exit()
+              else:
+                  try:
+                      os.makedirs(folder)
+                  except Exception as e:
+                      context.critical("msgType","Rename failed:\nCould not create target folder:, "+folder+"\n"+str(e))
+                      raise e
+          if '%' in dependency.path:
+              i = 0
+              for frame_range in dependency.frame_ranges:
+                  for frame_n in range(frame_range.start, frame_range.end+1):
+                      if i == 0:
+                          if not os.path.isfile(dependency.path % frame_n):
+                              break
+                      i += 1
+                      try:
+                          os.rename(dependency.path % frame_n, new_path % frame_n)
+                      except Exception as e:
+                          context.critical("msgType","Rename failed:\nFrom: "+dependency.path+"\nTo: "+new_path+"\n"+str(e))
+                          raise e
+              if i == 0:
+                  continue
+              folders.append((dependency.type.capitalize(), folder))
+              subsFolder = os.path.dirname(folder)
+          else:
+              if not os.path.isfile(dependency.path):
+                  continue
+              if os.path.isfile(new_path) and 'windows' in platform.system().lower():
+                try:
+                  os.remove(new_path)
+                except Exception as e:
+                  context.critical("msgType","Failed to remove existing file: "+new_path)
+              try:
+                  os.rename(dependency.path, new_path)
+              except Exception as e:
+                  context.critical("msgType","Rename failed:\nFrom: "+dependency.path+"\nTo: "+new_path+"\n"+str(e))
+                  raise e
+              folders.append((dependency.type.capitalize(), new_path))
+              subsFolder = folder
+          cleanupFolder = os.path.dirname(dependency.path)
+          while cleanupFolder:
+              for garbage in glob.glob(os.path.join(cleanupFolder, '*.w64_tmp')):
+                  try:
+                      os.remove(garbage)
+                  except Exception as e:
+                      break
+              try:
+                  os.rmdir(cleanupFolder)
+                  cleanupFolder = os.path.dirname(cleanupFolder)
+              except Exception as e:
+                  break
+          if dependency.type == 'highres' and render.subtitles.count > 0:
+              srtPath = os.path.join(subsFolder, render.project+'_'+render.title+'.srt')
+              vttPath = os.path.join(subsFolder, render.project+'_'+render.title+'.vtt')
+              try:
+                  open(srtPath, 'w').write(render.subtitles.srt)
+                  open(vttPath, 'w').write(render.subtitles.vtt)
+              except Exception as e:
+                  errors += "\n\nError: Failed to write subtitles: "+str(e)
+  message = 'Rename complete: \n\
+Project: %s\n\
+Render:  %s\n\
+Name:    %s' % (render.project, render.name, render.title )
+  for folder in folders:
+    message += '\nFolder: %s' % folder[1]
+  context.info("msgType",message)</code>
     </properties>
     <connections>
-     <rankFrom type="input" id="fd735eef-0425-4fed-b438-d6b574274a90" name="rankFrom" specialType="order"/>
-     <rankTo type="output" id="5057e89c-4473-40b5-ab39-b9c49c56a1f5" name="rankTo" specialType="order"/>
-     <rndin type="input" id="59c82fa3-89ac-4e4a-bf78-b41a77e3c9dd" name="rndin">
+     <rankFrom specialType="order" type="input" name="rankFrom" id="fd735eef-0425-4fed-b438-d6b574274a90">
+      <linkedTo>94275731-a006-4dba-bf37-2eb26d71e7ed</linkedTo>
+     </rankFrom>
+     <rankTo specialType="order" type="output" name="rankTo" id="5057e89c-4473-40b5-ab39-b9c49c56a1f5"/>
+     <rnd type="input" name="rnd" id="9beee748-ee89-4e65-824f-ba92705d6203">
       <linkedTo>b0509a9e-99a3-44f5-8865-6852eaa2ce8f</linkedTo>
-     </rndin>
-     <rndout type="output" id="af710d5e-75c7-4127-bc43-225739c685ed" name="rndout">
-      <linkedTo>13795320-f155-4cf3-9023-063149d906cb</linkedTo>
-     </rndout>
-    </connections>
-   </node>
-   <node type="task" class="MistikaRender">
-    <properties>
-     <objectName type="string">MistikaRender</objectName>
-     <color type="color">#0063b4</color>
-     <colorByStatus type="bool">false</colorByStatus>
-     <pos type="point2">150,-357.6</pos>
-     <schemaName type="string">mistikarender</schemaName>
-     <nameConvention type="CnameConvention"></nameConvention>
-     <bypassSupported type="bool">true</bypassSupported>
-     <bypassEnabled type="bool">false</bypassEnabled>
-     <renderFarmSupported type="bool">true</renderFarmSupported>
-     <farmParams type="string"></farmParams>
-     <renderFarmEnabled type="bool">false</renderFarmEnabled>
-     <url type="string"></url>
-     <metadata type="MediaFileInfoData"></metadata>
-     <exportMetadata type="int">0</exportMetadata>
-    </properties>
-    <connections>
-     <rankFrom type="input" id="257e5093-f1dc-447b-a12d-60ded5dead7b" name="rankFrom" specialType="order"/>
-     <rankTo type="output" id="94275731-a006-4dba-bf37-2eb26d71e7ed" name="rankTo" specialType="order"/>
-     <rnd type="input" id="13795320-f155-4cf3-9023-063149d906cb" name="rnd">
-      <linkedTo>af710d5e-75c7-4127-bc43-225739c685ed</linkedTo>
      </rnd>
-     <VideoOut label="AV Out" type="output" id="6d403464-25e3-4ab3-b6ff-a7df27410c57" name="VideoOut"/>
-     <AudioOut label="Ext. Audio" type="output" id="400a8fc9-f29d-47fc-a956-1fa85d96d308" name="AudioOut"/>
+     <media type="input" name="media" id="07894591-9fe5-43be-b721-f7ac4b6ad066">
+      <linkedTo>6d403464-25e3-4ab3-b6ff-a7df27410c57</linkedTo>
+     </media>
     </connections>
    </node>
   </nodes>
